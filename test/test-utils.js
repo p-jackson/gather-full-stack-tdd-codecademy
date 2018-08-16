@@ -28,8 +28,27 @@ const parseTextFromHTML = (htmlAsString, selector) => {
   }
 };
 
+// extract element attribute from an Element by selector.
+const parseAttributeFromHTML = (htmlAsString, selector, attributeName) => {
+  const selectedElement = jsdom(htmlAsString).querySelector(selector);
+  if (selectedElement !== null) {
+    if (selectedElement.hasAttribute(attributeName)) {
+      return selectedElement.getAttribute(attributeName);
+    } else {
+      throw new Error(
+        `Element with selector "${selector}" does not have a "${attributeName}" attribute`
+      );
+    }
+  } else {
+    throw new Error(
+      `No element with selector "${selector}" found in HTML string`
+    );
+  }
+};
+
 module.exports = {
   buildItemObject,
   seedItemToDatabase,
-  parseTextFromHTML
+  parseTextFromHTML,
+  parseAttributeFromHTML
 };
