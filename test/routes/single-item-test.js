@@ -2,6 +2,7 @@ const { assert } = require("chai");
 const request = require("supertest");
 
 const app = require("../../app");
+const Item = require("../../models/item");
 
 const {
   parseTextFromHTML,
@@ -43,6 +44,22 @@ describe("Server path: /items/:id", () => {
         parseAttributeFromHTML(response.text, ".single-item-img img", "src"),
         item.imageUrl
       );
+    });
+  });
+
+  describe("POST /items/:id/delete", () => {
+    it("removes the item from the database", async () => {
+      const item = await seedItemToDatabase();
+
+      const response = await request(app)
+        .post(`/items/${item._id}/delete`)
+        .send();
+
+      const deletedItem = await Item.findById(item._id);
+      assert.notOk(deletedItem, "The item should have been deleted");
+
+      assert.strictEqual(response.status, 302);
+      assert.strictEqual(response.headers.location, "/");
     });
   });
 });

@@ -29,4 +29,9 @@ router.get("/items/:id", async (req, res) => {
   res.render("single", { item });
 });
 
+router.post("/items/:id/delete", async (req, res) => {
+  await Item.deleteOne({ _id: req.params.id });
+  res.redirect("/");
+});
+
 module.exports = router;
