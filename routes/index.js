@@ -34,4 +34,14 @@ router.post("/items/:id/delete", async (req, res) => {
   res.redirect("/");
 });
 
+router.get("/items/:id/update", async (req, res) => {
+  const item = await Item.findById(req.params.id);
+  res.render("update", { item });
+});
+
+router.post("/items/:id/update", async (req, res) => {
+  await Item.findByIdAndUpdate(req.params.id, req.body);
+  res.redirect(`/items/${req.params.id}`);
+});
+
 module.exports = router;
